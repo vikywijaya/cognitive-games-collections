@@ -64,8 +64,8 @@ const Scores = {
 /* ============================================================
    DAILY CHALLENGE STATE  (module-level, not persisted to hash)
    ============================================================ */
-let _challenge    = null;   // { games: [...gameMeta], index, scores: [] }
-let _confirmLeave = null;   // function(): bool — set during active challenge to gate nav
+let _challenge          = null;   // { games: [...gameMeta], index, scores: [] }
+let _requireLeaveConfirm = false; // true while a daily-challenge game is in progress
 
 /* ============================================================
    ACTIVE GAME TEARDOWN
@@ -216,7 +216,7 @@ function _buildDailyGames() {
 
 function renderDailyIntro() {
   teardownGame();
-  _confirmLeave = null;
+  _requireLeaveConfirm = false;
   setHeader({ showBack: true, showHome: true });
 
   const games   = _buildDailyGames();
@@ -273,9 +273,7 @@ function renderDailyGame() {
   const impl     = GameRegistry.get(gameMeta.id);
   teardownGame();
   setHeader({ showBack: true, showHome: true });
-  _confirmLeave = () => confirm(
-    'Leave the Daily Challenge?\n\nYour current game progress will be lost.'
-  );
+  _requireLeaveConfirm = true;
 
   main.innerHTML = `
     <!-- Progress bar -->
@@ -344,7 +342,7 @@ function renderDailyGame() {
 function renderDailyResult() {
   teardownGame();
   setHeader({ showBack: true, showHome: true });
-  _confirmLeave = null;   // challenge is complete — no confirmation needed
+  _requireLeaveConfirm = false;
 
   const { games, scores } = _challenge;
   const avg = scores.length
@@ -809,16 +807,44 @@ function handleRoute() {
   }
 }
 
+/* ---- Leave-challenge confirmation modal ---- */
+function showLeaveModal(onConfirm) {
+  const modal     = document.getElementById('leaveModal');
+  const stayBtn   = document.getElementById('leaveModalStay');
+  const leaveBtn  = document.getElementById('leaveModalLeave');
+
+  modal.hidden = false;
+  leaveBtn.focus();
+
+  function cleanup() {
+    modal.hidden = true;
+    leaveBtn.removeEventListener('click', handleLeave);
+    stayBtn.removeEventListener('click',  handleStay);
+    modal.removeEventListener('click',    handleBackdrop);
+  }
+  function handleLeave()    { cleanup(); onConfirm(); }
+  function handleStay()     { cleanup(); }
+  function handleBackdrop(e){ if (e.target === modal) cleanup(); }
+
+  leaveBtn.addEventListener('click',  handleLeave);
+  stayBtn.addEventListener('click',   handleStay);
+  modal.addEventListener('click',     handleBackdrop);
+}
+
 /* ---- Header nav buttons ---- */
 btnBack.addEventListener('click', () => {
-  if (_confirmLeave && !_confirmLeave()) return;
-  _confirmLeave = null;
-  history.back();
+  if (_requireLeaveConfirm) {
+    showLeaveModal(() => { _requireLeaveConfirm = false; history.back(); });
+  } else {
+    history.back();
+  }
 });
 btnHome.addEventListener('click', () => {
-  if (_confirmLeave && !_confirmLeave()) return;
-  _confirmLeave = null;
-  navigate('#home');
+  if (_requireLeaveConfirm) {
+    showLeaveModal(() => { _requireLeaveConfirm = false; navigate('#home'); });
+  } else {
+    navigate('#home');
+  }
 });
 appLogo.style.cursor = 'pointer';
 appLogo.addEventListener('click', () => navigate('#home'));

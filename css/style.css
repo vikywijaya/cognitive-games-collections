@@ -148,6 +148,64 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================================
+   LEAVE CHALLENGE MODAL
+   ============================================================ */
+.leave-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.60);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-md);
+}
+
+.leave-modal[hidden] { display: none; }
+
+.leave-modal-box {
+  background: var(--clr-surface);
+  border-radius: var(--r-lg);
+  padding: var(--sp-xl);
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  animation: modal-in 0.18s ease;
+}
+
+@keyframes modal-in {
+  from { transform: scale(0.88); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.leave-modal-icon {
+  font-size: 48px;
+  margin-bottom: var(--sp-sm);
+}
+
+.leave-modal-title {
+  font-size: var(--fs-xl);
+  color: var(--clr-text);
+  margin-bottom: var(--sp-xs);
+}
+
+.leave-modal-msg {
+  font-size: var(--fs-md);
+  color: var(--clr-text-muted);
+  margin-bottom: var(--sp-lg);
+}
+
+.leave-modal-actions {
+  display: flex;
+  gap: var(--sp-sm);
+  justify-content: center;
+}
+
+.leave-modal-stay,
+.leave-modal-leave { min-width: 120px; min-height: 48px; font-size: var(--fs-md); }
+
+/* ============================================================
    HOME VIEW
    ============================================================ */
 .home-hero {
@@ -518,6 +576,9 @@ img { max-width: 100%; display: block; }
   border: 2px solid var(--clr-primary);
 }
 .btn-outline:hover { background: var(--clr-primary); color: #fff; }
+
+.btn-danger { background: #C62828; color: #fff; }
+.btn-danger:hover { background: #B71C1C; }
 
 .btn-lg {
   font-size: var(--fs-lg);

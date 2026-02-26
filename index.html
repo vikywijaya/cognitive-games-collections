@@ -26,6 +26,20 @@
     <!-- Views injected here by JavaScript -->
   </main>
 
+  <!-- ===== LEAVE CHALLENGE CONFIRMATION MODAL ===== -->
+  <div id="leaveModal" class="leave-modal" hidden aria-modal="true" role="dialog"
+       aria-labelledby="leaveModalTitle">
+    <div class="leave-modal-box">
+      <div class="leave-modal-icon">⚠️</div>
+      <h3 class="leave-modal-title" id="leaveModalTitle">Leave Daily Challenge?</h3>
+      <p class="leave-modal-msg">Your progress on the current game will be lost.</p>
+      <div class="leave-modal-actions">
+        <button class="btn btn-outline leave-modal-stay" id="leaveModalStay">Stay</button>
+        <button class="btn btn-danger leave-modal-leave" id="leaveModalLeave">Leave</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== FOOTER ===== -->
   <footer class="app-footer">
     <p>MindFit &mdash; Keep Your Mind Sharp Every Day</p>
