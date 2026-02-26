@@ -1537,6 +1537,86 @@ img { max-width: 100%; display: block; }
   margin-bottom: var(--sp-md);
 }
 
+/* ---- Level / Difficulty Filter ---- */
+.level-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-xs);
+  margin-bottom: var(--sp-md);
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--clr-surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.level-filter-label {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--clr-text-muted);
+  margin-right: var(--sp-xs);
+  white-space: nowrap;
+}
+
+.level-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 2px solid var(--clr-border);
+  border-radius: var(--r-full);
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  padding: 8px 20px;
+  min-height: 44px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.level-btn:hover {
+  border-color: var(--clr-primary);
+  background: #E3F2FD;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.level-btn:active { transform: scale(0.96); }
+
+/* Active states per level */
+.level-btn--all.active   { background: var(--clr-primary);    border-color: var(--clr-primary);    color: #fff; box-shadow: var(--shadow-sm); }
+.level-btn--easy.active  { background: #2E7D32;               border-color: #2E7D32;               color: #fff; box-shadow: var(--shadow-sm); }
+.level-btn--medium.active{ background: #F57F17;               border-color: #F57F17;               color: #fff; box-shadow: var(--shadow-sm); }
+.level-btn--hard.active  { background: #C62828;               border-color: #C62828;               color: #fff; box-shadow: var(--shadow-sm); }
+
+/* Count badge inside filter button */
+.level-count {
+  background: rgba(255,255,255,0.30);
+  border-radius: var(--r-full);
+  padding: 1px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+.level-btn:not(.active) .level-count {
+  background: rgba(0,0,0,0.08);
+}
+
+/* Empty-state message per category when filter hides all games */
+.cat-empty-msg {
+  padding: var(--sp-md);
+  text-align: center;
+  color: var(--clr-text-muted);
+  font-size: var(--fs-sm);
+  font-style: italic;
+  border: 2px dashed var(--clr-border);
+  border-radius: var(--r-md);
+  margin-top: var(--sp-xs);
+}
+
 /* Category jump links */
 .cat-jump-links {
   display: flex;

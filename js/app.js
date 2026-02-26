@@ -389,16 +389,20 @@ function renderGames() {
   teardownGame();
   setHeader({ showBack: true, showHome: true });
 
+  const totalGames = GAME_CATEGORIES.flatMap(c => c.games).length;
+
   const catSections = GAME_CATEGORIES.map(cat => {
     const avg      = Scores.categoryAvg(cat.id);
     const gameRows = cat.games.map(game => {
       const sc         = Scores.get(game.id);
-      const badgeClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' }[game.difficulty] || 'badge-easy';
+      const diff       = game.difficulty || 'Easy';
+      const badgeClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' }[diff] || 'badge-easy';
       return `
-        <div class="game-card" style="--cat-color:${esc(cat.color)}">
+        <div class="game-card" style="--cat-color:${esc(cat.color)}"
+             data-difficulty="${esc(diff)}">
           <div class="game-card-header">
             <div class="game-card-name">${esc(game.name)}</div>
-            <span class="game-badge ${badgeClass}">${esc(game.difficulty)}</span>
+            <span class="game-badge ${badgeClass}">${esc(diff)}</span>
           </div>
           <div class="game-card-desc">${esc(game.description)}</div>
           <div class="game-card-score">
@@ -425,7 +429,10 @@ function renderGames() {
             ? `<div class="cat-section-avg" style="background:${esc(cat.color)}">Avg ${avg}%</div>`
             : ''}
         </div>
-        <div class="games-list">${gameRows}</div>
+        <div class="games-list" id="games-list-${esc(cat.id)}">${gameRows}</div>
+        <div class="cat-empty-msg" id="cat-empty-${esc(cat.id)}" style="display:none">
+          No games at this level in this category.
+        </div>
       </section>`;
   }).join('');
 
@@ -433,6 +440,24 @@ function renderGames() {
     <div class="games-view-header animate-fade-in">
       <h2>🎮 Cognitive Games</h2>
       <p>Choose any game across all categories.</p>
+
+      <!-- Difficulty filter -->
+      <div class="level-filter" role="group" aria-label="Filter by difficulty">
+        <span class="level-filter-label">Level:</span>
+        <button class="level-btn level-btn--all active" data-level="All">
+          All <span class="level-count" id="count-All">${totalGames}</span>
+        </button>
+        <button class="level-btn level-btn--easy" data-level="Easy">
+          🟢 Easy <span class="level-count" id="count-Easy">0</span>
+        </button>
+        <button class="level-btn level-btn--medium" data-level="Medium">
+          🟡 Medium <span class="level-count" id="count-Medium">0</span>
+        </button>
+        <button class="level-btn level-btn--hard" data-level="Hard">
+          🔴 Hard <span class="level-count" id="count-Hard">0</span>
+        </button>
+      </div>
+
       <!-- Category jump links -->
       <div class="cat-jump-links">
         ${GAME_CATEGORIES.map(c => `
@@ -445,7 +470,47 @@ function renderGames() {
     </div>
     ${catSections}`;
 
-  // Smooth scroll anchors
+  /* ---- Update counts in filter buttons ---- */
+  const allCards = [...main.querySelectorAll('.game-card')];
+  ['Easy', 'Medium', 'Hard'].forEach(level => {
+    const n = allCards.filter(c => c.dataset.difficulty === level).length;
+    const el = main.querySelector(`#count-${level}`);
+    if (el) el.textContent = n;
+  });
+
+  /* ---- Filter logic ---- */
+  function applyFilter(level) {
+    allCards.forEach(card => {
+      const match = level === 'All' || card.dataset.difficulty === level;
+      card.style.display = match ? '' : 'none';
+    });
+
+    // Show/hide empty-state message per category section
+    GAME_CATEGORIES.forEach(cat => {
+      const listEl  = main.querySelector(`#games-list-${cat.id}`);
+      const emptyEl = main.querySelector(`#cat-empty-${cat.id}`);
+      const section = main.querySelector(`#cat-${cat.id}`);
+      if (!listEl || !emptyEl || !section) return;
+
+      const visibleInCat = cat.games.filter(
+        g => level === 'All' || (g.difficulty || 'Easy') === level
+      ).length;
+
+      emptyEl.style.display = visibleInCat === 0 ? 'block' : 'none';
+      section.style.display = ''; // always show section header
+    });
+  }
+
+  /* ---- Filter button clicks ---- */
+  main.querySelectorAll('.level-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      main.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter(btn.dataset.level);
+    });
+  });
+
+  /* ---- Smooth scroll anchors ---- */
   main.querySelectorAll('.cat-jump-link').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
@@ -454,7 +519,7 @@ function renderGames() {
     });
   });
 
-  // Play buttons
+  /* ---- Play buttons ---- */
   main.querySelectorAll('.play-btn').forEach(btn => {
     btn.addEventListener('click', () => navigate(`#game:${btn.dataset.game}`));
   });
