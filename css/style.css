@@ -404,6 +404,24 @@ img { max-width: 100%; display: block; }
   border-color: var(--cat-color, var(--clr-primary));
 }
 
+.game-card-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 96px;
+  border-radius: var(--r-sm);
+  margin-bottom: var(--sp-sm);
+  overflow: hidden;
+}
+
+.game-card-thumb-icon {
+  font-size: 52px;
+  line-height: 1;
+  user-select: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+}
+
 .game-card-header {
   display: flex;
   justify-content: space-between;

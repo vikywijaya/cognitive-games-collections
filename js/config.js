@@ -38,18 +38,21 @@ window.GAME_CATEGORIES = [
         name:        'Card Match',
         description: 'Flip cards and find matching pairs. Tests visual memory.',
         difficulty:  'Easy',
+        thumbnail:   '🃏',
       },
       {
         id:          'sequence-recall',
         name:        'Sequence Recall',
         description: 'Watch the light-up pattern and repeat it. Trains working memory.',
         difficulty:  'Medium',
+        thumbnail:   '💡',
       },
       {
         id:          'word-memory',
         name:        'Word Memory',
         description: 'Memorise a list of words, then pick them from a larger set.',
         difficulty:  'Medium',
+        thumbnail:   '📋',
       },
       // ── Add more memory games here ──
     ],
@@ -67,18 +70,21 @@ window.GAME_CATEGORIES = [
         name:        'Odd One Out',
         description: 'Find the item that does not belong to the group.',
         difficulty:  'Easy',
+        thumbnail:   '🔍',
       },
       {
         id:          'color-match',
         name:        'Color Match',
         description: 'Classic Stroop test – tap the ink colour, not the word.',
         difficulty:  'Hard',
+        thumbnail:   '🎨',
       },
       {
         id:          'number-hunt',
         name:        'Number Hunt',
         description: 'Tap numbers 1→25 in order as fast as you can (Schulte table).',
         difficulty:  'Medium',
+        thumbnail:   '🔢',
       },
       // ── Add more attention games here ──
     ],
@@ -96,12 +102,14 @@ window.GAME_CATEGORIES = [
         name:        'Anagram',
         description: 'Rearrange scrambled letters to spell a hidden word.',
         difficulty:  'Medium',
+        thumbnail:   '🔤',
       },
       {
         id:          'word-search',
         name:        'Word Search',
         description: 'Find hidden words in a grid of letters.',
         difficulty:  'Easy',
+        thumbnail:   '🔎',
       },
       // ── Add more language games here ──
     ],
@@ -119,12 +127,14 @@ window.GAME_CATEGORIES = [
         name:        'Quick Math',
         description: 'Solve simple arithmetic as fast as possible. Beat the timer!',
         difficulty:  'Medium',
+        thumbnail:   '➕',
       },
       {
         id:          'reaction-time',
         name:        'Reaction Time',
         description: 'Tap the circle the instant it turns green. How fast are you?',
         difficulty:  'Easy',
+        thumbnail:   '⏱️',
       },
       // ── Add more speed games here ──
     ],
@@ -142,12 +152,14 @@ window.GAME_CATEGORIES = [
         name:        'Number Sequence',
         description: 'Identify the rule in a number series and pick what comes next.',
         difficulty:  'Medium',
+        thumbnail:   '📈',
       },
       {
         id:          'pattern-match',
         name:        'Pattern Match',
         description: 'Choose the emoji that correctly completes the visual pattern.',
         difficulty:  'Hard',
+        thumbnail:   '🔷',
       },
       // ── Add more problem-solving games here ──
     ],

@@ -433,6 +433,9 @@ function renderGames() {
       return `
         <div class="game-card" style="--cat-color:${esc(cat.color)}"
              data-difficulty="${esc(diff)}">
+          <div class="game-card-thumb" style="background:${esc(cat.color)}22">
+            <span class="game-card-thumb-icon">${game.thumbnail ? esc(game.thumbnail) : cat.icon}</span>
+          </div>
           <div class="game-card-header">
             <div class="game-card-name">${esc(game.name)}</div>
             <span class="game-badge ${badgeClass}">${esc(diff)}</span>
@@ -572,6 +575,9 @@ function renderCategory(catId) {
     const badgeClass = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' }[game.difficulty] || 'badge-easy';
     return `
       <div class="game-card" style="--cat-color:${esc(cat.color)}">
+        <div class="game-card-thumb" style="background:${esc(cat.color)}22">
+          <span class="game-card-thumb-icon">${game.thumbnail ? esc(game.thumbnail) : cat.icon}</span>
+        </div>
         <div class="game-card-header">
           <div class="game-card-name">${esc(game.name)}</div>
           <span class="game-badge ${badgeClass}">${esc(game.difficulty)}</span>
