@@ -97,6 +97,28 @@ function esc(str) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+/* ── Player account (injected externally as window.PlayerAccount) ──
+   Expected shape: { name: string, avatar?: string }            */
+function getPlayer() {
+  return window.PlayerAccount || null;
+}
+
+function greetingPhrase() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+function updateHeaderPlayer(player) {
+  if (!player) return;
+  const nameEl = document.createElement('span');
+  nameEl.className = 'header-player-name';
+  nameEl.textContent = player.avatar ? `${player.avatar} ${player.name}` : player.name;
+  // Insert between logo and btnHome
+  appLogo.insertAdjacentElement('afterend', nameEl);
+}
+
 function scoreStar(score) {
   if (!score) return '';
   if (score >= 90) return '⭐⭐⭐';
@@ -132,15 +154,22 @@ function renderHome() {
 
   const overall    = Scores.overallScore();
   const totalPlays = Scores.totalPlays();
+  const player     = getPlayer();
+  const heroTitle  = player
+    ? `${greetingPhrase()}, ${esc(player.name)}! 👋`
+    : 'Welcome to MindFit';
+  const heroSub    = player
+    ? `Ready for today\'s brain workout? Keep your mind sharp and healthy!`
+    : 'Daily brain exercises to keep your mind sharp, focused, and healthy.';
 
   main.innerHTML = `
     <div class="home-landing animate-fade-in">
 
       <!-- Hero -->
       <div class="landing-hero">
-        <div class="landing-brain">🧠</div>
-        <h2 class="landing-title">Welcome to MindFit</h2>
-        <p class="landing-subtitle">Daily brain exercises to keep your mind sharp, focused, and healthy.</p>
+        <div class="landing-brain">${player && player.avatar ? player.avatar : '🧠'}</div>
+        <h2 class="landing-title">${heroTitle}</h2>
+        <p class="landing-subtitle">${heroSub}</p>
         <div class="landing-stats-row">
           <div class="landing-stat">
             <span class="landing-stat-val">${overall || '—'}</span>
@@ -853,4 +882,5 @@ appLogo.addEventListener('click', () => navigate('#home'));
 window.addEventListener('hashchange', handleRoute);
 
 /* ---- Boot ---- */
+updateHeaderPlayer(getPlayer());
 handleRoute();

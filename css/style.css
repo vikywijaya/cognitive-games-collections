@@ -112,6 +112,20 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
+.header-player-name {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: var(--r-full);
+  padding: 4px var(--sp-sm);
+  white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .btn-icon {
   background: rgba(255,255,255,0.18);
   border: 2px solid rgba(255,255,255,0.5);
