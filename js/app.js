@@ -64,7 +64,8 @@ const Scores = {
 /* ============================================================
    DAILY CHALLENGE STATE  (module-level, not persisted to hash)
    ============================================================ */
-let _challenge = null;   // { games: [...gameMeta], index, scores: [] }
+let _challenge    = null;   // { games: [...gameMeta], index, scores: [] }
+let _confirmLeave = null;   // function(): bool — set during active challenge to gate nav
 
 /* ============================================================
    ACTIVE GAME TEARDOWN
@@ -215,6 +216,7 @@ function _buildDailyGames() {
 
 function renderDailyIntro() {
   teardownGame();
+  _confirmLeave = null;
   setHeader({ showBack: true, showHome: true });
 
   const games   = _buildDailyGames();
@@ -270,7 +272,10 @@ function renderDailyGame() {
   const gameMeta = games[index];
   const impl     = GameRegistry.get(gameMeta.id);
   teardownGame();
-  setHeader({ showBack: false, showHome: false }); // lock nav during challenge
+  setHeader({ showBack: true, showHome: true });
+  _confirmLeave = () => confirm(
+    'Leave the Daily Challenge?\n\nYour current game progress will be lost.'
+  );
 
   main.innerHTML = `
     <!-- Progress bar -->
@@ -338,7 +343,8 @@ function renderDailyGame() {
 
 function renderDailyResult() {
   teardownGame();
-  setHeader({ showBack: false, showHome: true });
+  setHeader({ showBack: true, showHome: true });
+  _confirmLeave = null;   // challenge is complete — no confirmation needed
 
   const { games, scores } = _challenge;
   const avg = scores.length
@@ -804,8 +810,16 @@ function handleRoute() {
 }
 
 /* ---- Header nav buttons ---- */
-btnBack.addEventListener('click', () => { history.back(); });
-btnHome.addEventListener('click', () => { navigate('#home'); });
+btnBack.addEventListener('click', () => {
+  if (_confirmLeave && !_confirmLeave()) return;
+  _confirmLeave = null;
+  history.back();
+});
+btnHome.addEventListener('click', () => {
+  if (_confirmLeave && !_confirmLeave()) return;
+  _confirmLeave = null;
+  navigate('#home');
+});
 appLogo.style.cursor = 'pointer';
 appLogo.addEventListener('click', () => navigate('#home'));
 
