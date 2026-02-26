@@ -81,14 +81,13 @@ function teardownGame() {
 /* ============================================================
    DOM REFS & HELPERS
    ============================================================ */
-const main    = document.getElementById('appMain');
-const btnBack = document.getElementById('btnBack');
-const btnHome = document.getElementById('btnHome');
-const appLogo = document.getElementById('appLogo');
+const main         = document.getElementById('appMain');
+const btnBack      = document.getElementById('btnBack');
+const appLogo      = document.getElementById('appLogo');
+const headerPlayer = document.getElementById('headerPlayer');
 
-function setHeader({ showBack = false, showHome = false }) {
-  btnBack.style.visibility = showBack  ? 'visible' : 'hidden';
-  btnHome.style.visibility = showHome ? 'visible' : 'hidden';
+function setHeader({ showBack = false }) {
+  btnBack.style.visibility = showBack ? 'visible' : 'hidden';
 }
 
 function esc(str) {
@@ -112,11 +111,14 @@ function greetingPhrase() {
 
 function updateHeaderPlayer(player) {
   if (!player) return;
-  const nameEl = document.createElement('span');
-  nameEl.className = 'header-player-name';
-  nameEl.textContent = player.avatar ? `${player.avatar} ${player.name}` : player.name;
-  // Insert between logo and btnHome
-  appLogo.insertAdjacentElement('afterend', nameEl);
+  const initials = player.name.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0, 2).join('');
+  headerPlayer.innerHTML = `
+    <div class="header-player-inner">
+      <div class="header-avatar" aria-hidden="true">
+        ${player.avatar ? player.avatar : initials}
+      </div>
+      <span class="header-player-name">${esc(player.name)}</span>
+    </div>`;
 }
 
 function scoreStar(score) {
@@ -150,7 +152,7 @@ function timeAgo(ts) {
 function renderHome() {
   teardownGame();
   _challenge = null;
-  setHeader({ showBack: false, showHome: false });
+  setHeader({ showBack: false });
 
   const overall    = Scores.overallScore();
   const totalPlays = Scores.totalPlays();
@@ -246,7 +248,7 @@ function _buildDailyGames() {
 function renderDailyIntro() {
   teardownGame();
   _requireLeaveConfirm = false;
-  setHeader({ showBack: true, showHome: true });
+  setHeader({ showBack: true });
 
   const games   = _buildDailyGames();
   _challenge    = { games, index: 0, scores: [] };
@@ -301,7 +303,7 @@ function renderDailyGame() {
   const gameMeta = games[index];
   const impl     = GameRegistry.get(gameMeta.id);
   teardownGame();
-  setHeader({ showBack: true, showHome: true });
+  setHeader({ showBack: true });
   _requireLeaveConfirm = true;
 
   main.innerHTML = `
@@ -370,7 +372,7 @@ function renderDailyGame() {
 
 function renderDailyResult() {
   teardownGame();
-  setHeader({ showBack: true, showHome: true });
+  setHeader({ showBack: true });
   _requireLeaveConfirm = false;
 
   const { games, scores } = _challenge;
@@ -420,7 +422,7 @@ function renderDailyResult() {
    ============================================================ */
 function renderGames() {
   teardownGame();
-  setHeader({ showBack: true, showHome: true });
+  setHeader({ showBack: true });
 
   const totalGames = GAME_CATEGORIES.flatMap(c => c.games).length;
 
@@ -568,7 +570,7 @@ function renderCategory(catId) {
   teardownGame();
   const cat = GAME_CATEGORIES.find(c => c.id === catId);
   if (!cat) { navigate('#games'); return; }
-  setHeader({ showBack: true, showHome: true });
+  setHeader({ showBack: true });
 
   const gameCards = cat.games.map(game => {
     const sc         = Scores.get(game.id);
@@ -615,7 +617,7 @@ function renderCategory(catId) {
    ============================================================ */
 function renderGame(gameId) {
   teardownGame();
-  setHeader({ showBack: true, showHome: true });
+  setHeader({ showBack: true });
 
   let catColor = 'var(--clr-primary)';
   let catId    = null;
@@ -692,7 +694,7 @@ function renderGame(gameId) {
    ============================================================ */
 function renderScores() {
   teardownGame();
-  setHeader({ showBack: true, showHome: true });
+  setHeader({ showBack: true });
 
   const overall    = Scores.overallScore();
   const totalPlays = Scores.totalPlays();
@@ -872,13 +874,6 @@ btnBack.addEventListener('click', () => {
     showLeaveModal(() => { _requireLeaveConfirm = false; history.back(); });
   } else {
     history.back();
-  }
-});
-btnHome.addEventListener('click', () => {
-  if (_requireLeaveConfirm) {
-    showLeaveModal(() => { _requireLeaveConfirm = false; navigate('#home'); });
-  } else {
-    navigate('#home');
   }
 });
 appLogo.style.cursor = 'pointer';

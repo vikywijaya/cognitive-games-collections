@@ -112,16 +112,42 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
+.header-player {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 44px;
+}
+
+.header-player-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+}
+
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  border: 2px solid rgba(255,255,255,0.6);
+  color: #fff;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+}
+
 .header-player-name {
   font-size: var(--fs-sm);
   font-weight: 600;
   color: rgba(255,255,255,0.92);
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.35);
-  border-radius: var(--r-full);
-  padding: 4px var(--sp-sm);
   white-space: nowrap;
-  max-width: 140px;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -1262,6 +1288,7 @@ img { max-width: 100%; display: block; }
   }
 
   .app-logo { font-size: var(--fs-xl); }
+  .header-player-name { display: none; }
   .category-grid, .games-list { grid-template-columns: 1fr; }
   .math-options, .stroop-options, .sequence-options { grid-template-columns: 1fr 1fr; }
   .simon-buttons { gap: 10px; }
