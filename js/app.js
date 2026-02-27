@@ -496,14 +496,17 @@ function renderGames() {
         </button>
       </div>
 
-      <!-- Category jump links -->
+      <!-- Category filter buttons -->
       <div class="cat-jump-links">
+        <button class="cat-jump-link cat-jump-link--all active" data-cat="all">
+          🎮 All
+        </button>
         ${GAME_CATEGORIES.map(c => `
-          <a class="cat-jump-link" href="#cat-anchor-${esc(c.id)}"
+          <button class="cat-jump-link"
              style="background:${esc(c.color)}"
-             data-anchor="cat-${esc(c.id)}">
+             data-cat="${esc(c.id)}">
             ${c.icon} ${esc(c.name)}
-          </a>`).join('')}
+          </button>`).join('')}
       </div>
     </div>
     ${catSections}`;
@@ -515,6 +518,8 @@ function renderGames() {
     const el = main.querySelector(`#count-${level}`);
     if (el) el.textContent = n;
   });
+
+  let activeCategory = 'all';
 
   /* ---- Filter logic ---- */
   function applyFilter(level) {
@@ -530,12 +535,17 @@ function renderGames() {
       const section = main.querySelector(`#cat-${cat.id}`);
       if (!listEl || !emptyEl || !section) return;
 
+      if (activeCategory !== 'all' && cat.id !== activeCategory) {
+        section.style.display = 'none';
+        return;
+      }
+
       const visibleInCat = cat.games.filter(
         g => level === 'All' || (g.difficulty || 'Easy') === level
       ).length;
 
       emptyEl.style.display = visibleInCat === 0 ? 'block' : 'none';
-      section.style.display = ''; // always show section header
+      section.style.display = '';
     });
   }
 
@@ -548,12 +558,14 @@ function renderGames() {
     });
   });
 
-  /* ---- Smooth scroll anchors ---- */
-  main.querySelectorAll('.cat-jump-link').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      const target = document.getElementById(a.dataset.anchor);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  /* ---- Category filter buttons ---- */
+  main.querySelectorAll('.cat-jump-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      main.querySelectorAll('.cat-jump-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = btn.dataset.cat;
+      const currentLevel = main.querySelector('.level-btn.active')?.dataset.level || 'All';
+      applyFilter(currentLevel);
     });
   });
 
