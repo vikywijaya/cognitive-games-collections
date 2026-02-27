@@ -108,11 +108,9 @@ img { max-width: 100%; display: block; }
 }
 
 .app-logo {
-  font-size: var(--fs-xl);
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  white-space: nowrap;
-  color: var(--clr-primary);
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
 .header-player {
@@ -1313,7 +1311,7 @@ img { max-width: 100%; display: block; }
     --sp-xl:   32px;
   }
 
-  .app-logo { font-size: var(--fs-xl); }
+  .app-logo { height: 32px; }
   .header-player-name { display: none; }
   .category-grid { grid-template-columns: 1fr; }
   .game-card { grid-template-columns: 44px 1fr; grid-template-rows: auto auto auto auto; }
